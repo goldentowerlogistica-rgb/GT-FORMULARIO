@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#172033">
+<title>GT-FORMULARIO</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+*{box-sizing:border-box}html,body{margin:0;height:100%;font-family:Arial,sans-serif;background:#f4f6f9;color:#172033}
+body{display:flex;flex-direction:column;height:100dvh}
+header{display:flex;align-items:center;gap:12px;padding:10px 16px;background:#172033;color:#fff;flex-shrink:0}
+header img{width:48px;height:48px;border-radius:8px}h1{font-size:18px;margin:0}header p{font-size:12px;margin:4px 0 0;color:#d1d5db}
+iframe{display:block;flex:1;width:100%;min-height:0;border:0;background:#fff}
+footer{padding:12px;display:flex;justify-content:center;align-items:center;gap:12px;background:#172033;flex-shrink:0}
+footer a{color:#fff;font-size:13px}button{padding:10px 14px;border:0;border-radius:8px;background:#d5ad49;color:#172033;font-weight:bold;cursor:pointer}
+</style>
+</head>
+<body>
+<header><img src="icon-192.png" alt="Golden Tower"><div><h1>GT-FORMULARIO</h1><p>Golden Tower · Registro de requerimientos</p></div></header>
+<iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfHq8WKwzsC6oJwfY8e1l3zJCYBFNx9e4sTWIGMKvXb0gcKPA/viewform?embedded=true" title="Formulario de requerimientos de Golden Tower"></iframe>
+<footer><button id="instalar" hidden>Instalar app</button><a href="https://docs.google.com/forms/d/e/1FAIpQLSfHq8WKwzsC6oJwfY8e1l3zJCYBFNx9e4sTWIGMKvXb0gcKPA/viewform" target="_blank" rel="noopener">Abrir formulario en otra ventana</a></footer>
+<script>
+let solicitudInstalacion = null;
+const boton = document.getElementById('instalar');
+window.addEventListener('beforeinstallprompt',evento=>{
+  evento.preventDefault();solicitudInstalacion=evento;boton.hidden=false;
+});
+boton.addEventListener('click',async()=>{
+  if(!solicitudInstalacion)return;
+  const solicitud=solicitudInstalacion;solicitudInstalacion=null;boton.hidden=true;
+  await solicitud.prompt();await solicitud.userChoice;
+});
+window.addEventListener('appinstalled',()=>{solicitudInstalacion=null;boton.hidden=true;});
+if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js').then(reg=>reg.update()).catch(()=>{});}
+</script>
+</body>
+</html>
